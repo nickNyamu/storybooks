@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 const { engine } = require("express-handlebars");
+const methodOverride = require("method-override");
 const passport = require("passport");
 const session = require("express-session");
 const MongoStore = require("connect-mongo"); //Pass session to connect-mongo to store session in the database
@@ -22,6 +23,16 @@ const app = express();
 // Body parser
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+// Method override
+app.use(methodOverride(function (req, res) {
+  if (req.body && typeof req.body === "object" && "_method" in req.body) {
+    // Look in the urlencoded POST body and delete it
+    let method = req.body._method;
+    delete req.body._method;
+    return method;
+  }
+}));
 
 //Express session middleware
 app.use(
