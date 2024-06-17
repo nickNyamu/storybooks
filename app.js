@@ -25,14 +25,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // Method override
-app.use(methodOverride(function (req, res) {
-  if (req.body && typeof req.body === "object" && "_method" in req.body) {
-    // Look in the urlencoded POST body and delete it
-    let method = req.body._method;
-    delete req.body._method;
-    return method;
-  }
-}));
+app.use(
+  methodOverride(function (req, res) {
+    if (req.body && typeof req.body === "object" && "_method" in req.body) {
+      // Look in the urlencoded POST body and delete it
+      let method = req.body._method;
+      delete req.body._method;
+      return method;
+    }
+  })
+);
 
 //Express session middleware
 app.use(
@@ -50,7 +52,13 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // Handlebars Helpers
-const { formatDate, truncate, stripTags, editIcon, select } = require("./helpers/hbs");
+const {
+  formatDate,
+  truncate,
+  stripTags,
+  editIcon,
+  select,
+} = require("./helpers/hbs");
 
 // Configure Handlebars view engine
 app.engine(
